@@ -12,24 +12,24 @@ import io.restassured.response.Response;
 
 
 public class GetPet {
-	
-	
-	@Test(dataProvider="petStoreData",priority=1)
-	public void get_pet_details(String pid)
+
+    @Test(dataProvider="mockData")
+	public void getPetDetails(int pid, int expectedCode)
 	{
-		Response res = given()
-				.contentType(ContentType.JSON)
-				.pathParam("id",pid)
-				.when()
-					.get("https://petstore.swagger.io/v2/pet/{id}");
-		System.out.println(res.asString());
-		String json = res.asString();
-		JsonPath jp = new JsonPath(json);
-		assertEquals(pid, jp.getString("id"));
-		//assertEquals("Yedo",jp.get("name"));
-		//assertEquals("Available",jp.get("status"));
-		
+		given()
+			.contentType(ContentType.JSON)
+			.pathParam("id", pid)
+		.when()
+			.get("https://petstore.swagger.io/v2/pet/{id}")
+		.then()
+			.statusCode(expectedCode);
 	}
+
+	@DataProvider
+	public Object[][] mockData() {
+		return new Object[][]{{1, 200}, {0, 404}};
+	}
+
 	@DataProvider(name="petStoreData")
 	public String[][] petStoreData()
 	{
