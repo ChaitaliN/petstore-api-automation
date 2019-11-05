@@ -27,9 +27,11 @@ public class CreatePet {
 	
 	public ValidatableResponse res;
 	public String json;
+	public JsonPath jp;
 	
-	@Test()
-	public JsonPath createPet()
+	//@BeforeMethod
+	@Test(priority=1)
+	public void createPet()
 	{
 		res=given()
 			.contentType("application/json")
@@ -37,18 +39,25 @@ public class CreatePet {
 		.when()
 			.post("https://petstore.swagger.io/v2/pet/")
 		.then()
-			.statusCode(201);
+			.statusCode(200);
 		json=res.toString();
-		JsonPath jp = new JsonPath(json);
-		return jp;
+		jp = new JsonPath(json);
+		
+		if(jp.get("name").equals(RestUtils.getName()))
+		 {
+			System.out.println("Id is matched");
+		 }
+		
 	}
-	
-	@Test()
-	public void verifyPetId(JsonPath jp)
+		
+	/*//@SuppressWarnings("deprecation")
+	@Test(priority=1)
+	public void verifyInvalidEnpoints()
 	{
-		//when().then()
-		//	.post()
-		//	.assertThat("RestUtils.getId()",jp.get("id"));
-	}
+		 if(jp.get("id").equals(RestUtils.getId()))
+		 {
+			System.out.println("Id is matched");
+		 }
+	}*/
 		
 }
