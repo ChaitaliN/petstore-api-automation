@@ -3,6 +3,7 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertEquals;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import io.restassured.http.ContentType;
@@ -13,46 +14,59 @@ import io.restassured.response.Response;
 public class GetPet {
 	
 	
-	@Test()
-	public void get_pet_details()
+	@Test(dataProvider="petStoreData",priority=1)
+	public void get_pet_details(String pid)
 	{
 		Response res = given()
 				.contentType(ContentType.JSON)
-				.pathParam("id",18121990)
+				.pathParam("id",pid)
 				.when()
 					.get("https://petstore.swagger.io/v2/pet/{id}");
 		System.out.println(res.asString());
 		String json = res.asString();
 		JsonPath jp = new JsonPath(json);
-		assertEquals(18121990, jp.get("id"));
-		assertEquals("Yedo",jp.get("name"));
-		assertEquals("Available",jp.get("status"));
+		assertEquals(pid, jp.getString("id"));
+		//assertEquals("Yedo",jp.get("name"));
+		//assertEquals("Available",jp.get("status"));
 		
 	}
-	/*
-	@Test(priority=1)
-	public void get_pet_details()
+	@DataProvider(name="petStoreData")
+	public String[][] petStoreData()
 	{
+		String[][] data= {{"301","Lucy","available"},{"302","Tommy","available"},{"18121990","Sejal", "sold"},};
+		return data;
+	}
+	
+	
+	@Test(dataProvider="petStoreData",priority=2)
+	public void get_pet_statusCode(String pid)
+	{	
 		given()
 			.contentType("application/json")
+			.pathParam("id", pid)
 		.when()
-			.get("https://petstore.swagger.io/v2/pet/18121990")
+			.get("https://petstore.swagger.io/v2/pet/{id}")
 		.then()
 			.statusCode(200)
 			.statusLine("HTTP/1.1 200 OK")
 			.log().all();
 	 }
-	@Test(priority=2)
-	public void verify_pet_details()
+	
+	
+	@Test(dataProvider="petStoreData",priority=3)
+	public void verify_pet_details(String pid,String pname,String pstatus)
 	{	
 		 
 		given().when()
-			.get("https://petstore.swagger.io/v2/pet/18121990")
+			.pathParam("id", pid)
+			.get("https://petstore.swagger.io/v2/pet/{id}")
 		.then()
-			.assertThat().body("id", equalTo(18121990))
-			.assertThat().body("name", equalTo("Yedo"))
-			.assertThat().body("status", equalTo("Available"));
+			.assertThat().body("id", equalTo(pid))
+			.and()
+			.assertThat().body("name", equalTo(pname))
+			.and()
+			.assertThat().body("status", equalTo(pstatus));
 		
-	}*/
+	}
 
 }
