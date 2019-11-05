@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="Petstore Test Suit" verbose="1" >
+  <test name="Petstore_get_Post_tests" >
+    <classes>
+      <class name="com.petstore.post.CreatePet"/>
+      <class name="com.petstore.get.GetPet"/>
+    </classes>
+  </test>
+</suite>
