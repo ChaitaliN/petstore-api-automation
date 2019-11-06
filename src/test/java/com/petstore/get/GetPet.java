@@ -13,6 +13,25 @@ import io.restassured.response.Response;
 
 public class GetPet {
 
+	@Test
+	public void testOAuth() {
+
+		Response response = given().auth().preemptive().basic("test", "abc123")
+				.contentType("application/x-www-form-urlencoded")
+				.formParam("grant_type", "client_credentials")
+				.formParam("scope", "read:pets write:pets")
+				.when()
+				.post("http://petstore.swagger.io/oauth/token");
+
+		JsonPath jp = new JsonPath(response.getBody().asString());
+		String accessToken = jp.get("access_token");
+		assertEquals(200, response.statusCode());
+
+		System.out.println(accessToken);
+		// TODO: return access token so that it can be used for other api calls
+		// return accessToken;
+	}
+
     @Test(dataProvider="mockData")
 	public void getPetDetails(int pid, int expectedCode)
 	{
