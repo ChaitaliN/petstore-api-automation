@@ -60,17 +60,18 @@ public class GetPet {
 				{ContentType.TEXT, "18121990", 400},
 		};
 	}
-
+/*
 	@DataProvider(name="petStoreData")
 	public String[][] petStoreData()
 	{
 		String[][] data= {{"301","Lucy","available"},{"302","Tommy","available"},{"18121990","Sejal", "sold"},};
 		return data;
 	}
-
+	
+	/*
 	@Test(dataProvider="petStoreData",priority=2)
 	public void get_pet_statusCode(String pid)
-	{
+	{	
 		given()
 			.contentType("application/json")
 			.pathParam("id", pid)
@@ -81,10 +82,12 @@ public class GetPet {
 			.statusLine("HTTP/1.1 200 OK")
 			.log().all();
 	 }
-
+	
+	
 	@Test(dataProvider="petStoreData",priority=3)
 	public void verify_pet_details(String pid,String pname,String pstatus)
-	{
+	{	
+		 
 		given().when()
 			.pathParam("id", pid)
 			.get("https://petstore.swagger.io/v2/pet/{id}")
@@ -94,5 +97,7 @@ public class GetPet {
 			.assertThat().body("name", equalTo(pname))
 			.and()
 			.assertThat().body("status", equalTo(pstatus));
-	}
+		
+	}*/
+
 }
