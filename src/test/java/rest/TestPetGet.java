@@ -24,12 +24,12 @@ public class TestPetGet {
 	@DataProvider
 	public Object[][] successMockData() {
 		return new Object[][]{
-				{991985, 200},
+				{991985, 200, ContentType.JSON},
 		};
 	}
 
     @Test(dataProvider="successMockData")
-	public void testSuccess(int pid, int expectedCode)
+	public void testSuccess(int pid, int expectedCode, ContentType ctype)
 	{
 		given()
 			.spec(defaultRequest)
@@ -38,6 +38,7 @@ public class TestPetGet {
 			.get("/pet/{id}")
 		.then()
 			.statusCode(expectedCode)
+            .contentType(ctype)
             .body("any { it.key == 'id' }", is(true))
 			.body("id", equalTo(pid));
 	}
@@ -47,9 +48,9 @@ public class TestPetGet {
 	public Object[][] failureMockData() {
 		return new Object[][]{
 				{ContentType.JSON, 0, 404},
-				{ContentType.TEXT, 991985, 400},
-				{ContentType.JSON, "notNumber", 404},
-				{ContentType.JSON, "%%##@@", 404},
+				{ContentType.JSON, "string_id", 400},
+				{ContentType.JSON, "%%##@@", 400},
+				{ContentType.TEXT, 991985, 400}
 		};
 	}
 

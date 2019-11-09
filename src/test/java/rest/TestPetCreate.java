@@ -1,5 +1,6 @@
 package rest;
 
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
@@ -7,6 +8,8 @@ import org.testng.annotations.Test;
 import utils.PetStoreUtil;
 import java.util.HashMap;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class TestPetCreate {
     protected static RequestSpecification defaultRequest;
@@ -21,18 +24,17 @@ public class TestPetCreate {
 	@DataProvider
 	public Object[][] successMockData() {
 		return new Object[][]{
-				{200},
-				{201}, // create status code should be 201
+				{201, 991985, "Milo", ContentType.JSON},
 		};
 	}
 
     @Test(dataProvider="successMockData")
-	public void testSuccess(int code) {
+	public void testSuccess(int code, int petID, String petName, ContentType ctype) {
 
         // define payload
         HashMap<String, Object> payload = new HashMap();
-        payload.put("id", "991985");
-        payload.put("name", "Milo");
+        payload.put("id", petID);
+        payload.put("name", petName);
 
 		given()
 			.spec(defaultRequest)
@@ -40,7 +42,10 @@ public class TestPetCreate {
 		.when()
 			.post("/pet")
 		.then()
-			.statusCode(code);
+			.statusCode(code)
+            .contentType(ctype)
+			.body("id", equalTo(petID))
+			.body("name", equalTo(petName));
 	}
 
     // Test fail cases
@@ -49,16 +54,17 @@ public class TestPetCreate {
 
         // define payload
         HashMap<String, Object> payload = new HashMap();
-        payload.put("id", "!@#");
+        payload.put("id", "string id");
+        payload.put("name", "Milo");
 
 		return new Object[][]{
-				{payload, 405},
-				{"random", 400}, // create status code should be 201
+				{payload, 400, "something bad happened"},
+				{"raw string", 400, "bad input"},
 		};
 	}
 
     @Test(dataProvider="failureMockData")
-	public void testFailure(Object payload, int code) {
+	public void testFailure(Object payload, int code, String resMessage) {
 
 		given()
 			.spec(defaultRequest)
@@ -66,6 +72,7 @@ public class TestPetCreate {
 		.when()
 			.post("/pet")
 		.then()
-			.statusCode(code);
+			.statusCode(code)
+			.body("message", equalTo(resMessage));
 	}
 }
