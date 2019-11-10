@@ -37,6 +37,8 @@ public class TestPetGet {
 		.when()
 			.get("/pet/{id}")
 		.then()
+            .log()
+            .all()
 			.statusCode(expectedCode)
             .contentType(ctype)
             .body("any { it.key == 'id' }", is(true))
@@ -64,6 +66,8 @@ public class TestPetGet {
 		.when()
 			.get("/pet/{id}")
 		.then()
+            .log()
+            .all()
 			.statusCode(expectedCode);
 	}
 }

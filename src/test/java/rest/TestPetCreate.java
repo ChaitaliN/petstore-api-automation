@@ -42,6 +42,8 @@ public class TestPetCreate {
 		.when()
 			.post("/pet")
 		.then()
+            .log()
+            .all()
 			.statusCode(code)
             .contentType(ctype)
 			.body("id", equalTo(petID))
@@ -72,6 +74,8 @@ public class TestPetCreate {
 		.when()
 			.post("/pet")
 		.then()
+            .log()
+            .all()
 			.statusCode(code)
 			.body("message", equalTo(resMessage));
 	}
