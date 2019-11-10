@@ -4,6 +4,7 @@
 <suite name="Petstore Test Suit" verbose="1" >
   <test name="Petstore_get_post_tests" >
     <classes>
+      <class name="rest.TestOAuth2"/>
       <class name="rest.TestPetCreate"/>
       <class name="rest.TestPetGet"/>
     </classes>
