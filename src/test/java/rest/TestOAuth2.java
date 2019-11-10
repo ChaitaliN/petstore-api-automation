@@ -27,6 +27,8 @@ public class TestOAuth2 {
 		.when()
 			.post("http://petstore.swagger.io/oauth/token")
         .then()
+            .log()
+            .all()
 		    .statusCode(expectedCode)
             .body(String.format("any { it.key == '%s' }", key), is(true))
 			.body(key, equalTo(value));
