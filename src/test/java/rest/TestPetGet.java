@@ -29,7 +29,7 @@ public class TestPetGet {
 	}
 
     @Test(dataProvider="successMockData")
-	public void testSuccess(int pid, int expectedCode, ContentType ctype)
+	public void testPositive(int pid, int expectedCode, ContentType ctype)
 	{
 		given()
 			.spec(defaultRequest)
@@ -57,7 +57,7 @@ public class TestPetGet {
 	}
 
     @Test(dataProvider="failureMockData")
-	public void testFailure(ContentType ctype, Object pid, int expectedCode)
+	public void testNegative(ContentType ctype, Object pid, int expectedCode)
 	{
 		given()
 			.spec(defaultRequest)

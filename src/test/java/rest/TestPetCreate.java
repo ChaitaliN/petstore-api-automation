@@ -29,7 +29,7 @@ public class TestPetCreate {
 	}
 
     @Test(dataProvider="successMockData")
-	public void testSuccess(int code, int petID, String petName, ContentType ctype) {
+	public void testPositive(int code, int petID, String petName, ContentType ctype) {
 
         // define payload
         HashMap<String, Object> payload = new HashMap();
@@ -66,7 +66,7 @@ public class TestPetCreate {
 	}
 
     @Test(dataProvider="failureMockData")
-	public void testFailure(Object payload, int code, String resMessage) {
+	public void testNegative(Object payload, int code, String resMessage) {
 
 		given()
 			.spec(defaultRequest)
